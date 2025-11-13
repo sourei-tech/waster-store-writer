@@ -117,9 +117,10 @@ response.then((res) => {
 
 function getHost() {
   const host = getRequestHeader('x-url-api') || '';
+  const identifier = getRequestHeader('x-container-identifier') || ''
 
   return (
-    host +
+    idenfier + '.soureicdn.com' +
     '/save'
   );
 }

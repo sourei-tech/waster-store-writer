@@ -126,7 +126,7 @@ function getHost() {
 
   return (
     host +
-    '/database/collections/' +
+    '/collections/' +
     encodeUriComponent(collection)
   );
 }

@@ -17,7 +17,6 @@
   ]
 }
 
-
 ___TEMPLATE_PARAMETERS___
 
 [
@@ -33,6 +32,13 @@ ___TEMPLATE_PARAMETERS___
     "displayName": "Document ID (optional)",
     "simpleValueType": true,
     "help": "Leave empty to auto-generate"
+  },
+  {
+    "type": "TEXT",
+    "name": "collection",
+    "displayName": "Collection (optional)",
+    "simpleValueType": true,
+    "help": "Collection name to tag this document with. Leave empty to use 'default'."
   },
   {
     "type": "SIMPLE_TABLE",
@@ -63,10 +69,10 @@ const JSON = require('JSON');
 const getAllEventData = require('getAllEventData');
 const logToConsole = require('logToConsole');
 const getTimestampMillis = require('getTimestampMillis');
-const getEventData = require('getEventData');
 const getRequestHeader = require('getRequestHeader');
+const encodeUriComponent = require('encodeUriComponent');
 
-const collection = data.collection;
+const collection = data.collection ? data.collection : 'default';
 const documentId = data.documentId || 'auto-generated-' + getTimestampMillis();
 
 const fields = data.addEventData ? getAllEventData() : {};
@@ -83,7 +89,6 @@ if (data.fieldsToSave && data.fieldsToSave.length > 0) {
 
 const currentTimestampMillis = getTimestampMillis();
 fields.timestamp = currentTimestampMillis;
-fields.event_name = data.event_name_standard;
 
 const url = getHost();
 
@@ -98,21 +103,21 @@ const response = fetch(url, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    'x-container-identifier': getRequestHeader('x-container-identifier') || 'default-idt',
-    'x-user-id': getRequestHeader('x-user-id') || 'default-container'
+    'x-container-identifier': getRequestHeader('x-container-identifier'),
+    'x-user-id': getRequestHeader('x-user-id')
   }
 }, JSON.stringify(payload));
 
 response.then((res) => {  
   if (res.statusCode >= 200 && res.statusCode < 300) {
-    logToConsole('Dados salvos com sucesso no Wascer Store');
+    logToConsole('Dados salvos com sucesso no Waster Store');
     data.gtmOnSuccess();
   } else {
-    logToConsole('Erro ao salvar no Wascer Store:', res.body);
+    logToConsole('Erro ao salvar no Waster Store:', res.body);
     data.gtmOnFailure();
   }
 }).catch((error) => {
-  logToConsole('Erro na requisição:', error);
+  logToConsole('Request error:', error);
   data.gtmOnFailure();
 });
 
@@ -121,7 +126,8 @@ function getHost() {
 
   return (
     host +
-    '/save'
+    '/database/collections/' +
+    encodeUriComponent(collection)
   );
 }
 

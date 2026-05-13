@@ -5,12 +5,12 @@
   "id": "cvt_temp_public_id",
   "version": 1,
   "securityGroups": [],
-  "displayName": "Waster Store Writer",
+  "displayName": "Wascer Store Writer",
   "brand": {
     "id": "brand_dummy",
     "displayName": ""
   },
-  "description": "Use this tag for writing data to the Waster Store.",
+  "description": "Use this tag for writing data to the Wascer Store.",
   "containerContexts": [
     "SERVER"
   ]
@@ -104,10 +104,10 @@ const response = fetch(url, {
 
 response.then((res) => {  
   if (res.statusCode >= 200 && res.statusCode < 300) {
-    logToConsole('Dados salvos com sucesso no Waster Store');
+    logToConsole('Dados salvos com sucesso no Wascer Store');
     data.gtmOnSuccess();
   } else {
-    logToConsole('Erro ao salvar no Waster Store:', res.body);
+    logToConsole('Erro ao salvar no Wascer Store:', res.body);
     data.gtmOnFailure();
   }
 }).catch((error) => {
